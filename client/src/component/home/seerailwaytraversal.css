@@ -1,0 +1,38 @@
+h1 {
+    color: rgb(0, 146, 204);
+    font-family: sans-serif;
+    font-size: 2em;
+    margin-bottom: 0;
+  }
+  
+  table {
+    font-family: sans-serif;
+  }
+  table th,
+  table td {
+    padding: 0.25em 0.5em;
+    text-align: left;
+  }
+  table th:nth-child(2),
+  table td:nth-child(2) {
+    text-align: right;
+  }
+  table td {
+    background-color: #eee;
+  }
+  table th {
+    background-color: #009;
+    color: #fff;
+  }
+  
+  .zigzag {
+    border-collapse: separate;
+    border-spacing: 0.25em 1em;
+  }
+  .zigzag tbody tr:nth-child(odd) {
+    transform: rotate(2deg);
+  }
+  .zigzag thead tr,
+  .zigzag tbody tr:nth-child(even) {
+    transform: rotate(-2deg);
+  }
