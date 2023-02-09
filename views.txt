@@ -1,0 +1,104 @@
+====================================================
+//create view
+create view manageorder as
+select orderitem.orderID, orderitem.customerid, orderitem.houseNumber,orderitem.streetName, orderitem.town,orderitem.district, 
+orderitem.ordereddate, orderitem.employeeid, orderitem.Maindriverid, orderitem.assistantDriverID, orderitem.orderstatus
+from orderitem join customer on (orderitem.customerid = customer.id) 
+join ordereditemdetails on (orderitem.orderID = ordereditemdetails.orderID)
+join items on (items.itemID = ordereditemdetails.itemID)
+
+
+--create view orderfulldetails
+create view orderfulldetails as
+select orderitem.orderID, orderitem.customerid, orderitem.houseNumber,orderitem.streetName, orderitem.town,orderitem.district, assignedtime,
+orderitem.ordereddate, orderitem.employeeid, orderitem.Maindriverid, orderitem.orderstatus, orderitem.store, customer.firstName as customerName ,  ordereditemdetails.itemID,items.name ,ordereditemdetails.quantity, items.stockavailability, 
+ordereditemdetails.totalPrice, orderitem.assistantDriverID
+from orderitem join customer on (orderitem.customerid = customer.id) join ordereditemdetails on (orderitem.orderID = ordereditemdetails.orderID)
+join items on (items.itemID = ordereditemdetails.itemID)
+
+
+--  create view raiway schedule
+
+  create view railwayschedule as
+  WITH difference_in_seconds AS (
+  SELECT
+    name,
+    destination,
+    depaturetime,
+    arrivaltime,
+    TIMESTAMPDIFF(SECOND, depaturetime, arrivaltime) AS seconds
+  FROM railway
+),
+ 
+differences AS (
+  SELECT
+  name,
+    destination,
+    depaturetime,
+    arrivaltime,
+    seconds,
+    MOD(seconds, 60) AS seconds_part,
+    MOD(seconds, 3600) AS minutes_part,
+    MOD(seconds, 3600 * 24) AS hours_part
+  FROM difference_in_seconds
+)
+ 
+SELECT
+name,
+    destination,
+    depaturetime,
+    arrivaltime,
+  CONCAT(
+    FLOOR(seconds / 3600 / 24), ' days ',
+    FLOOR(hours_part / 3600), ' hours ',
+    FLOOR(minutes_part / 60), ' minutes ',
+    seconds_part, ' seconds'
+  ) AS difference
+FROM differences;
+
+--create view driver Details
+create view driverDetails as 
+select driver.id, driver.driverTypeId, driver.firstName, driver.lastName, driver.contactNumber, driver.district,
+driverschedule.weeklyHours, driverschedule.consecutiveDrives, driverschedule.isAvailable, driverschedule.driveStart, driverschedule.driveEnd
+from driver join driverschedule on (driver.id = driverschedule.driverID) order by (weeklyHours) 
+
+-- create view storeRoute
+create view storeRoute as
+select route.routeID, routeName,routeHour, storeName , store.storeID, route.noOfOrders
+from route join  store on (route.storeID = store.storeID) ;
+
+
+create view townRoute as
+select route.routeID, routeName,routeHour, storeName ,town, noOfOrders, store.storeID
+from route join routedefinition on ( route.routeID = routedefinition.routeID) join  store on (route.storeID = store.storeID) ;
+
+create view OrderAndRoute as
+select orderfulldetails.orderID, houseNumber, streetName, orderfulldetails.town, district, Maindriverid,assistantDriverID, orderstatus, customerName, name, quantity, totalPrice,assignedtime, route.routeID,noOfOrders
+from orderfulldetails join routedefinition on (orderfulldetails.town = routedefinition.town) join route on ( route.routeID = routedefinition.routeID);
+
+
+create view driverView as
+select driver.id, driver.firstName, lastName, driver.driverTypeId, contactNumber, district, drivertype from driver join driver_type on (driver.driverTypeId = driver_type.drivertypeid)
+
+create view driveDetailsView as 
+select id, firstName, lastName, driverTypeId, contactNumber, district, drivertype , 
+driverschedule.isAvailable, driverschedule.consecutiveDrives, driverschedule.weeklyHours
+from driverview join driverschedule on (driverview.id = driverschedule.driverID)
+
+--  create view weeklyHoursMainDriver as
+-- select driverandroute.routeID,driverID,weeklyHours, routeHour
+-- from driverandroute join driverschedule 
+-- on (driverandroute.mainDriverID=driverschedule.driverID) join route on (route.routeID=driverandroute.routeID)
+
+
+--  create view weeklyHoursAssistantDriver as
+-- select driverandroute.routeID,driverID,weeklyHours, routeHour
+-- from driverandroute join driverschedule on (driverandroute.assistantDriverID=driverschedule.driverID)
+-- join route on (route.routeID=driverandroute.routeID)
+
+create view oldDriverUpdate as
+select Maindriverid, assistantDriverID, assignedtime  from  orderitem group by orderitem.assignedtime
+
+
+create view oldDriverUpdate as
+select Maindriverid, assistantDriverID, assignedtime , orderstatus, store from  orderitem where orderstatus !='Delivered and payed'
