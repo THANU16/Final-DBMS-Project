@@ -1,0 +1,112 @@
+-- trigger for driver id update 
+create trigger driveidUpdate after insert on driver for each row insert into driverSchedule(driverID) values (driverID);
+
+
+
+delimiter #
+create trigger consecutiveDriveUpdateMainDriver after update on driverandroute
+for each row 
+begin
+if new.mainDriverID <> old.mainDriverID then
+	update driverschedule 
+	set consecutiveDrives=1
+	where driverID = new.Maindriverid;
+end if;
+end #
+delimiter #
+
+
+delimiter #
+create trigger consecutiveDriveUpdateAssistantDriver after update on driverandroute
+for each row 
+begin
+
+if new.assistantDriverID<>old.assistantDriverID then
+
+update driverschedule 
+set consecutiveDrives=consecutiveDrives +1
+where driverID = new.assistantDriverID;
+end if;
+end #
+delimiter #
+
+
+
+delimiter #
+create trigger driveRouteUpdate after insert on route 
+for each row 
+begin
+	insert into driverandroute (routeID) values (new.routeID);
+end #
+delimiter #
+
+
+
+There is a problem due to concurrency
+delimiter #
+create trigger routeUpdateMainDriver after update on  orderitem
+for each row 
+
+begin
+	declare getRouteID int ;
+    set getRouteID = 0;
+	select distinct routeID into getRouteID from orderandroute where mainDriverID = new.mainDriverID;
+	if new.mainDriverID<>old.mainDriverID then
+    
+		update driverandroute 
+		set mainDriverID = new.mainDriverID
+		where routeID = getRouteID ;
+		
+	end if;
+end #
+delimiter #
+
+
+
+
+delimiter #
+create trigger routeUpdateAssDriver after update on  orderitem
+for each row 
+
+begin
+	declare getRouteID int ;
+    set getRouteID = 0;
+	select distinct routeID into getRouteID from orderandroute where assistantDriverID = new.assistantDriverID;
+	if new.assistantDriverID<>old.assistantDriverID then
+    
+		update driverandroute 
+		set assistantDriverID = new.assistantDriverID
+		where routeID = getRouteID ;
+		
+	end if;
+end #
+delimiter #
+
+delimiter #
+create trigger weeklyHoursUpdateMainDriver after update on driverandroute
+for each row 
+begin
+
+if new.mainDriverID<>old.mainDriverID then
+
+update weeklyhoursmaindriver 
+set weeklyHours=weeklyHours-routeHour
+where driverID = new.mainDriverID;
+end if;
+end #
+delimiter #
+
+delimiter #
+create trigger weeklyHoursUpdateAssistantDriver after update on driverandroute
+for each row 
+begin
+
+if new.assistantDriverID<>old.assistantDriverID then
+
+update weeklyhoursassistantdriver 
+set weeklyHours=weeklyHours-routeHour
+where driverID = new.assistantDriverID;
+end if;
+end #
+delimiter #
+
