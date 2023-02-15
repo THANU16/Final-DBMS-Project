@@ -8,6 +8,7 @@ Company A is a production company whose factory is located in Kandy. The company
 several products and customers (wholesalers, retailers and end customers). The company 
 has a supply chain that uses the railway system to distribute their products to the customers 
 islandwide. 
+
 A has negotiated with the railway department and have managed to retain a capacity allocated 
 for them from each transportation train trip and if the orders to be fulfilled with a certain trip 
 exceeds the capacity allocated, then that orders have to be scheduled to the next trip. The 
@@ -23,10 +24,8 @@ A driver and a driver assistant always assigned to a truck schedule and Drivers,
 assistants and trucks are independent entities. Drivers and Driver assistant assignments are 
 done according to their respective rosters (Driver roster and Driver Assistant roster) and 
 rosters have following constraints. 
-● A driver should never be assigned to two consecutive Truck schedule and for assistant 
-maximum consecutive turns is two 
-● Total work hours per driver should not exceed 40 hrs/week and for an assistant it’s 60 
-hrs/week 
+● A driver should never be assigned to two consecutive Truck schedule and for assistant maximum consecutive turns is two 
+● Total work hours per driver should not exceed 40 hrs/week and for an assistant it’s 60 hrs/week 
 Customers should place orders at least 7 days prior to the delivery date and customers should 
 be able to select a route that his delivery address is located. 
 The management of the company requires a comprehensive report system for monitoring and 
@@ -34,8 +33,10 @@ analytics of the platform as well. The reports include:
 ● Quarterly sales report for a given year 
 ● Items with most orders 
 ● Sales report categorized according to main cities and routes 
-● Working Hours of Drivers/ Driver Assistants and Used hours of Trucks ● Customer -
-order report 
+● Working Hours of Drivers/ Driver Assistants and Used hours of Trucks 
+● Customer - order report 
+
+
 Task 
 Your task is to model the database design to encapsulate these requirement. It should 
 consider all entities and relationships given in the description. Moreover you need to identify 
