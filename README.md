@@ -1,7 +1,17 @@
 # Final-DBMS-Project
-Fully Supply Chain Management 
+Full Supply Chain Management for food products that are to be sold world wide
+
+Here we have build the supply chain including the features that are being requsted in the project description. 
+
+In this repository you can find
+1. ER diagram
+2. SQL for the tables and the entities added
+3. Special procedures, views, triggers created in sql
+4. Java script file for front end and backend
+5. Front end with complete CSS
 
 
+Project Description :- 
 Supply Chain Management System 
 
 Company A is a production company whose factory is located in Kandy. The company has 
@@ -48,3 +58,6 @@ when not explicitly provided. The database must be populated with at least 40 or
 different routes and relevant delivery details must also be included. The train schedule should 
 also be created by yourself defining the capacities. These data insertions can be done 
 manually and no need of UI components just for the task of data input. 
+
+
+
